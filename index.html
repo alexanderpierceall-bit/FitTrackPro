@@ -24,9 +24,9 @@
     --radius: 12px;
     --radius-sm: 8px;
   }
- 
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   body {
     background: var(--bg);
     color: var(--text);
@@ -35,7 +35,7 @@
     line-height: 1.5;
     min-height: 100vh;
   }
- 
+
   /* ── Header ── */
   header {
     padding: 1.5rem 2rem;
@@ -48,7 +48,7 @@
     background: var(--bg);
     z-index: 10;
   }
- 
+
   .logo {
     font-family: var(--font-display);
     font-size: 20px;
@@ -58,14 +58,14 @@
     align-items: center;
     gap: 8px;
   }
- 
+
   .logo-dot {
     width: 8px; height: 8px;
     border-radius: 50%;
     background: var(--accent-orange);
     display: inline-block;
   }
- 
+
   .date-badge {
     font-size: 13px;
     color: var(--muted);
@@ -74,14 +74,14 @@
     border-radius: 20px;
     padding: 5px 14px;
   }
- 
+
   /* ── Layout ── */
   main {
     max-width: 960px;
     margin: 0 auto;
     padding: 2rem 1.5rem 4rem;
   }
- 
+
   /* ── Dashboard ── */
   .dashboard {
     display: grid;
@@ -89,7 +89,7 @@
     gap: 12px;
     margin-bottom: 2.5rem;
   }
- 
+
   .stat {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -98,18 +98,20 @@
     position: relative;
     overflow: hidden;
   }
- 
+
   .stat::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 2px;
   }
- 
+
   .stat.calories::before { background: var(--accent-orange); }
   .stat.exercises::before { background: var(--accent-blue); }
   .stat.sets::before { background: var(--accent-green); }
- 
+  .stat.protein::before { background: var(--accent-purple); }
+  .stat.creatine::before { background: var(--accent-green); }
+
   .stat-label {
     font-size: 12px;
     color: var(--muted);
@@ -117,7 +119,7 @@
     letter-spacing: 0.07em;
     margin-bottom: 8px;
   }
- 
+
   .stat-value {
     font-family: var(--font-display);
     font-size: 36px;
@@ -125,17 +127,19 @@
     line-height: 1;
     letter-spacing: -0.03em;
   }
- 
+
   .stat.calories .stat-value { color: var(--accent-orange); }
   .stat.exercises .stat-value { color: var(--accent-blue); }
   .stat.sets .stat-value { color: var(--accent-green); }
- 
+  .stat.protein .stat-value { color: var(--accent-purple); }
+  .stat.creatine .stat-value { color: var(--accent-green); }
+
   .stat-sub {
     font-size: 12px;
     color: var(--muted);
     margin-top: 4px;
   }
- 
+
   /* ── Tabs ── */
   .tabs {
     display: flex;
@@ -146,7 +150,7 @@
     padding: 4px;
     margin-bottom: 1.5rem;
   }
- 
+
   .tab {
     flex: 1;
     padding: 10px 16px;
@@ -164,21 +168,21 @@
     justify-content: center;
     gap: 7px;
   }
- 
+
   .tab svg { width: 16px; height: 16px; }
- 
+
   .tab:hover { color: var(--text); }
- 
+
   .tab.active {
     background: var(--surface2);
     color: var(--text);
     border: 1px solid var(--border2);
   }
- 
+
   /* ── Sections ── */
   .section { display: none; }
   .section.active { display: block; }
- 
+
   /* ── Add Form ── */
   .add-form {
     background: var(--surface);
@@ -187,7 +191,7 @@
     padding: 1.25rem;
     margin-bottom: 1.5rem;
   }
- 
+
   .form-title {
     font-size: 13px;
     font-weight: 500;
@@ -196,23 +200,23 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
- 
+
   .form-grid {
     display: grid;
     gap: 10px;
     margin-bottom: 12px;
   }
- 
-  .form-grid-food { grid-template-columns: 2fr 1fr 1fr; }
+
+  .form-grid-food { grid-template-columns: 2fr 1fr 1fr 1fr; }
   .form-grid-workout { grid-template-columns: 2fr 1fr 1fr 1fr; }
- 
+
   .field label {
     display: block;
     font-size: 12px;
     color: var(--muted);
     margin-bottom: 5px;
   }
- 
+
   .field input, .field select {
     width: 100%;
     background: var(--surface2);
@@ -225,15 +229,15 @@
     outline: none;
     transition: border-color 0.15s;
   }
- 
+
   .field input:focus, .field select:focus {
     border-color: rgba(255,255,255,0.3);
   }
- 
+
   .field input::placeholder { color: var(--muted); }
- 
+
   .field select option { background: #1e2126; }
- 
+
   .submit-btn {
     width: 100%;
     padding: 10px;
@@ -251,14 +255,14 @@
     gap: 7px;
     transition: background 0.15s, border-color 0.15s;
   }
- 
+
   .submit-btn:hover {
     background: rgba(255,255,255,0.08);
     border-color: rgba(255,255,255,0.22);
   }
- 
+
   .submit-btn svg { width: 16px; height: 16px; }
- 
+
   /* ── Entries ── */
   .entries-header {
     display: flex;
@@ -267,7 +271,7 @@
     margin-bottom: 10px;
     padding: 0 2px;
   }
- 
+
   .entries-title {
     font-size: 13px;
     font-weight: 500;
@@ -275,14 +279,14 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
   }
- 
+
   .entries-count {
     font-size: 12px;
     color: var(--muted);
   }
- 
+
   .entries { display: flex; flex-direction: column; gap: 8px; }
- 
+
   .entry {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -293,12 +297,12 @@
     gap: 14px;
     animation: slideIn 0.18s ease;
   }
- 
+
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-6px); }
     to { opacity: 1; transform: translateY(0); }
   }
- 
+
   .entry-icon {
     width: 36px; height: 36px;
     border-radius: 8px;
@@ -306,15 +310,15 @@
     flex-shrink: 0;
     font-size: 16px;
   }
- 
+
   .entry-icon.breakfast { background: rgba(240,106,42,0.15); }
   .entry-icon.lunch { background: rgba(61,184,125,0.15); }
   .entry-icon.dinner { background: rgba(61,142,240,0.15); }
   .entry-icon.snack { background: rgba(155,108,247,0.15); }
   .entry-icon.workout { background: rgba(61,142,240,0.12); }
- 
+
   .entry-body { flex: 1; min-width: 0; }
- 
+
   .entry-name {
     font-size: 14px;
     font-weight: 500;
@@ -322,7 +326,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
- 
+
   .entry-meta {
     font-size: 12px;
     color: var(--muted);
@@ -331,35 +335,35 @@
     align-items: center;
     gap: 8px;
   }
- 
+
   .badge {
     font-size: 11px;
     padding: 2px 8px;
     border-radius: 20px;
     font-weight: 500;
   }
- 
+
   .badge-breakfast { background: rgba(240,106,42,0.18); color: #f8a070; }
   .badge-lunch { background: rgba(61,184,125,0.18); color: #5dcfa0; }
   .badge-dinner { background: rgba(61,142,240,0.18); color: #6babf7; }
   .badge-snack { background: rgba(155,108,247,0.18); color: #b990ff; }
- 
+
   .entry-right {
     display: flex;
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
   }
- 
+
   .entry-value {
     font-family: var(--font-display);
     font-size: 16px;
     font-weight: 700;
   }
- 
+
   .entry-value.cal { color: var(--accent-orange); }
   .entry-value.sets { color: var(--accent-green); }
- 
+
   .delete-btn {
     background: none;
     border: none;
@@ -371,10 +375,10 @@
     align-items: center;
     transition: color 0.15s, background 0.15s;
   }
- 
+
   .delete-btn:hover { color: #e24b4a; background: rgba(226,75,74,0.1); }
   .delete-btn svg { width: 15px; height: 15px; }
- 
+
   /* ── Total row ── */
   .total-bar {
     display: flex;
@@ -386,45 +390,120 @@
     font-size: 14px;
     color: var(--muted);
   }
- 
+
   .total-bar strong {
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
     color: var(--text);
   }
- 
+
+  /* -- History summaries -- */
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+
+  .history-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+  }
+
+  .history-card-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .history-card-value {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .history-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: grid;
+    grid-template-columns: 1.2fr repeat(4, 1fr);
+    gap: 10px;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .history-row.header-row {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 11px;
+    padding-bottom: 2px;
+  }
+
+  .history-row strong {
+    font-family: var(--font-display);
+    font-size: 14px;
+  }
+
+
   /* ── Empty state ── */
   .empty {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--muted);
   }
- 
+
   .empty-icon {
     font-size: 40px;
     margin-bottom: 10px;
     opacity: 0.4;
   }
- 
+
   .empty p { font-size: 14px; }
- 
+
   /* ── Responsive ── */
   @media (max-width: 640px) {
     header { padding: 1rem; }
     main { padding: 1.25rem 1rem 3rem; }
     .dashboard { grid-template-columns: 1fr 1fr; }
-    .dashboard .stat:last-child { grid-column: 1 / -1; }
     .form-grid-food { grid-template-columns: 1fr 1fr; }
     .form-grid-food .field:first-child { grid-column: 1 / -1; }
     .form-grid-workout { grid-template-columns: 1fr 1fr; }
     .form-grid-workout .field:first-child { grid-column: 1 / -1; }
+    .history-grid { grid-template-columns: 1fr 1fr; }
+    .history-row { grid-template-columns: 1fr 1fr; }
+    .history-row.header-row { display: none; }
+    .history-row span::before {
+      content: attr(data-label);
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
     .stat-value { font-size: 28px; }
   }
 </style>
 </head>
 <body>
- 
+
 <header>
   <div class="logo">
     <span class="logo-dot"></span>
@@ -432,15 +511,20 @@
   </div>
   <div class="date-badge" id="header-date"></div>
 </header>
- 
+
 <main>
- 
+
   <!-- Dashboard -->
   <div class="dashboard">
     <div class="stat calories">
       <div class="stat-label">Calories</div>
       <div class="stat-value" id="dash-cal">0</div>
       <div class="stat-sub">kcal today</div>
+    </div>
+    <div class="stat protein">
+      <div class="stat-label">Protein</div>
+      <div class="stat-value" id="dash-protein">0g</div>
+      <div class="stat-sub">grams today</div>
     </div>
     <div class="stat exercises">
       <div class="stat-label">Exercises</div>
@@ -453,7 +537,15 @@
       <div class="stat-sub">across all exercises</div>
     </div>
   </div>
- 
+
+  <div class="add-form">
+    <div class="form-title">Daily supplements</div>
+    <button class="submit-btn" id="creatine-btn" onclick="toggleCreatine()">
+      <span id="creatine-check">☐</span>
+      Creatine taken today
+    </button>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs">
     <button class="tab active" id="tab-food" onclick="switchTab('food')">
@@ -464,8 +556,14 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>
       Workout log
     </button>
+    <button class="tab" id="tab-weekly" onclick="switchTab('weekly')">
+      Weekly log
+    </button>
+    <button class="tab" id="tab-monthly" onclick="switchTab('monthly')">
+      Monthly log
+    </button>
   </div>
- 
+
   <!-- Food section -->
   <div class="section active" id="sec-food">
     <div class="add-form">
@@ -478,6 +576,10 @@
         <div class="field">
           <label>Calories</label>
           <input type="number" id="f-cal" placeholder="0" min="0" />
+        </div>
+        <div class="field">
+          <label>Protein (g)</label>
+          <input type="number" id="f-protein" placeholder="0" min="0" />
         </div>
         <div class="field">
           <label>Meal type</label>
@@ -504,7 +606,7 @@
       <strong id="food-total-val"></strong>
     </div>
   </div>
- 
+
   <!-- Workout section -->
   <div class="section" id="sec-workout">
     <div class="add-form">
@@ -542,53 +644,116 @@
       <strong id="workout-total-val"></strong>
     </div>
   </div>
- 
+
+
+  <!-- Weekly section -->
+  <div class="section" id="sec-weekly">
+    <div class="entries-header">
+      <span class="entries-title">This week's summary</span>
+      <span class="entries-count" id="weekly-range"></span>
+    </div>
+    <div class="history-grid">
+      <div class="history-card">
+        <div class="history-card-label">Calories</div>
+        <div class="history-card-value" id="weekly-cal">0</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Protein</div>
+        <div class="history-card-value" id="weekly-protein">0g</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Workouts</div>
+        <div class="history-card-value" id="weekly-workouts">0</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Creatine Days</div>
+        <div class="history-card-value" id="weekly-creatine">0/7</div>
+      </div>
+    </div>
+    <div class="history-list" id="weekly-list"></div>
+  </div>
+
+  <!-- Monthly section -->
+  <div class="section" id="sec-monthly">
+    <div class="entries-header">
+      <span class="entries-title">This month's summary</span>
+      <span class="entries-count" id="monthly-range"></span>
+    </div>
+    <div class="history-grid">
+      <div class="history-card">
+        <div class="history-card-label">Calories</div>
+        <div class="history-card-value" id="monthly-cal">0</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Protein</div>
+        <div class="history-card-value" id="monthly-protein">0g</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Workouts</div>
+        <div class="history-card-value" id="monthly-workouts">0</div>
+      </div>
+      <div class="history-card">
+        <div class="history-card-label">Creatine Days</div>
+        <div class="history-card-value" id="monthly-creatine">0</div>
+      </div>
+    </div>
+    <div class="history-list" id="monthly-list"></div>
+  </div>
+
+
 </main>
- 
+
 <script>
   const MEAL_EMOJI = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
   const todayKey = () => new Date().toISOString().slice(0,10);
   const LS_FOOD = 'fitlog_food_' + todayKey();
   const LS_WORKOUT = 'fitlog_workout_' + todayKey();
- 
+  const LS_CREATINE = 'fitlog_creatine_' + todayKey();
+
   let foodLog = [];
   let workoutLog = [];
- 
+  let creatineTaken = false;
+
   function loadData() {
     try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD) || '[]'); } catch(e) { foodLog = []; }
     try { workoutLog = JSON.parse(localStorage.getItem(LS_WORKOUT) || '[]'); } catch(e) { workoutLog = []; }
+    creatineTaken = localStorage.getItem(LS_CREATINE) === 'true';
   }
- 
+
   function saveFood() { localStorage.setItem(LS_FOOD, JSON.stringify(foodLog)); }
   function saveWorkout() { localStorage.setItem(LS_WORKOUT, JSON.stringify(workoutLog)); }
- 
+
   function switchTab(t) {
     document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
     document.getElementById('tab-' + t).classList.add('active');
     document.getElementById('sec-' + t).classList.add('active');
+    if (t === 'weekly') renderWeekly();
+    if (t === 'monthly') renderMonthly();
   }
- 
+
   function addFood() {
     const name = document.getElementById('f-name').value.trim();
     const cal = parseInt(document.getElementById('f-cal').value) || 0;
+    const protein = parseInt(document.getElementById('f-protein').value) || 0;
     const type = document.getElementById('f-type').value;
     if (!name) { document.getElementById('f-name').focus(); return; }
-    foodLog.push({ id: Date.now(), name, cal, type });
+    foodLog.push({ id: Date.now(), name, cal, protein, type });
     saveFood();
     document.getElementById('f-name').value = '';
     document.getElementById('f-cal').value = '';
+    document.getElementById('f-protein').value = '';
     renderFood();
     updateDash();
   }
- 
+
   function deleteFood(id) {
     foodLog = foodLog.filter(f => f.id !== id);
     saveFood();
     renderFood();
     updateDash();
   }
- 
+
   function addWorkout() {
     const name = document.getElementById('w-name').value.trim();
     const sets = parseInt(document.getElementById('w-sets').value) || 0;
@@ -604,26 +769,26 @@
     renderWorkout();
     updateDash();
   }
- 
+
   function deleteWorkout(id) {
     workoutLog = workoutLog.filter(w => w.id !== id);
     saveWorkout();
     renderWorkout();
     updateDash();
   }
- 
+
   function renderFood() {
     const el = document.getElementById('food-entries');
     const totalEl = document.getElementById('food-total');
     const countEl = document.getElementById('food-count');
- 
+
     if (!foodLog.length) {
       el.innerHTML = `<div class="empty"><div class="empty-icon">🥗</div><p>No meals logged yet — add your first meal above.</p></div>`;
       totalEl.style.display = 'none';
       countEl.textContent = '';
       return;
     }
- 
+
     countEl.textContent = foodLog.length + ' meal' + (foodLog.length !== 1 ? 's' : '');
     el.innerHTML = foodLog.map(f => `
       <div class="entry">
@@ -633,30 +798,30 @@
           <div class="entry-meta"><span class="badge badge-${f.type}">${f.type}</span></div>
         </div>
         <div class="entry-right">
-          <span class="entry-value cal">${f.cal} kcal</span>
+          <span class="entry-value cal">${f.cal} kcal · ${f.protein || 0}g protein</span>
           <button class="delete-btn" onclick="deleteFood(${f.id})" aria-label="Delete ${escHtml(f.name)}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
         </div>
       </div>`).join('');
- 
+
     const total = foodLog.reduce((s, f) => s + f.cal, 0);
     document.getElementById('food-total-val').textContent = total + ' kcal';
     totalEl.style.display = 'flex';
   }
- 
+
   function renderWorkout() {
     const el = document.getElementById('workout-entries');
     const totalEl = document.getElementById('workout-total');
     const countEl = document.getElementById('workout-count');
- 
+
     if (!workoutLog.length) {
       el.innerHTML = `<div class="empty"><div class="empty-icon">🏋️</div><p>No exercises logged yet — add your first exercise above.</p></div>`;
       totalEl.style.display = 'none';
       countEl.textContent = '';
       return;
     }
- 
+
     countEl.textContent = workoutLog.length + ' exercise' + (workoutLog.length !== 1 ? 's' : '');
     el.innerHTML = workoutLog.map(w => `
       <div class="entry">
@@ -672,37 +837,175 @@
           </button>
         </div>
       </div>`).join('');
- 
+
     const total = workoutLog.reduce((s, w) => s + w.sets, 0);
     document.getElementById('workout-total-val').textContent = total + ' sets';
     totalEl.style.display = 'flex';
   }
- 
+
+
+  function formatKey(date) {
+    return date.toISOString().slice(0,10);
+  }
+
+  function readLog(prefix, key) {
+    try {
+      return JSON.parse(localStorage.getItem(prefix + key) || '[]');
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function readCreatine(key) {
+    return localStorage.getItem('fitlog_creatine_' + key) === 'true';
+  }
+
+  function summarizeDay(key) {
+    const foods = readLog('fitlog_food_', key);
+    const workouts = readLog('fitlog_workout_', key);
+    return {
+      key,
+      calories: foods.reduce((s, f) => s + (f.cal || 0), 0),
+      protein: foods.reduce((s, f) => s + (f.protein || 0), 0),
+      workouts: workouts.length,
+      sets: workouts.reduce((s, w) => s + (w.sets || 0), 0),
+      creatine: readCreatine(key)
+    };
+  }
+
+  function getWeekKeys() {
+    const today = new Date();
+    const day = today.getDay();
+    const mondayOffset = day === 0 ? -6 : 1 - day;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + mondayOffset);
+
+    const keys = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + i);
+      keys.push(formatKey(d));
+    }
+    return keys;
+  }
+
+  function getMonthKeys() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const keys = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      keys.push(formatKey(new Date(year, month, day)));
+    }
+    return keys;
+  }
+
+  function renderHistoryRows(targetId, summaries, showAllRows) {
+    const el = document.getElementById(targetId);
+    const rows = summaries.filter(s => showAllRows || s.calories || s.protein || s.workouts || s.sets || s.creatine);
+
+    if (!rows.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><p>No history logged yet.</p></div>`;
+      return;
+    }
+
+    el.innerHTML = `
+      <div class="history-row header-row">
+        <span>Date</span>
+        <span>Calories</span>
+        <span>Protein</span>
+        <span>Workouts</span>
+        <span>Creatine</span>
+      </div>
+      ${rows.map(s => `
+        <div class="history-row">
+          <strong>${new Date(s.key + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</strong>
+          <span data-label="Calories">${s.calories} kcal</span>
+          <span data-label="Protein">${s.protein}g</span>
+          <span data-label="Workouts">${s.workouts} workout${s.workouts !== 1 ? 's' : ''}</span>
+          <span data-label="Creatine">${s.creatine ? '✓ Taken' : '☐ Not logged'}</span>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  function renderWeekly() {
+    const keys = getWeekKeys();
+    const summaries = keys.map(summarizeDay);
+    const totals = summaries.reduce((acc, s) => {
+      acc.calories += s.calories;
+      acc.protein += s.protein;
+      acc.workouts += s.workouts;
+      acc.creatine += s.creatine ? 1 : 0;
+      return acc;
+    }, { calories: 0, protein: 0, workouts: 0, creatine: 0 });
+
+    document.getElementById('weekly-cal').textContent = totals.calories;
+    document.getElementById('weekly-protein').textContent = totals.protein + 'g';
+    document.getElementById('weekly-workouts').textContent = totals.workouts;
+    document.getElementById('weekly-creatine').textContent = totals.creatine + '/7';
+    document.getElementById('weekly-range').textContent = keys[0] + ' to ' + keys[keys.length - 1];
+    renderHistoryRows('weekly-list', summaries, true);
+  }
+
+  function renderMonthly() {
+    const keys = getMonthKeys();
+    const summaries = keys.map(summarizeDay);
+    const totals = summaries.reduce((acc, s) => {
+      acc.calories += s.calories;
+      acc.protein += s.protein;
+      acc.workouts += s.workouts;
+      acc.creatine += s.creatine ? 1 : 0;
+      return acc;
+    }, { calories: 0, protein: 0, workouts: 0, creatine: 0 });
+
+    document.getElementById('monthly-cal').textContent = totals.calories;
+    document.getElementById('monthly-protein').textContent = totals.protein + 'g';
+    document.getElementById('monthly-workouts').textContent = totals.workouts;
+    document.getElementById('monthly-creatine').textContent = totals.creatine;
+    document.getElementById('monthly-range').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    renderHistoryRows('monthly-list', summaries, false);
+  }
+
+  function toggleCreatine() {
+    creatineTaken = !creatineTaken;
+    localStorage.setItem(LS_CREATINE, creatineTaken);
+    updateDash();
+  }
+
   function updateDash() {
     document.getElementById('dash-cal').textContent = foodLog.reduce((s, f) => s + f.cal, 0);
+    document.getElementById('dash-protein').textContent = foodLog.reduce((s, f) => s + (f.protein || 0), 0) + 'g';
     document.getElementById('dash-ex').textContent = workoutLog.length;
     document.getElementById('dash-sets').textContent = workoutLog.reduce((s, w) => s + w.sets, 0);
+    document.getElementById('creatine-check').textContent = creatineTaken ? '✓' : '☐';
   }
- 
+
   function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;');
   }
- 
+
   function setDate() {
     const d = new Date();
     document.getElementById('header-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
   }
- 
+
   loadData();
   setDate();
   renderFood();
   renderWorkout();
   updateDash();
- 
+
   document.getElementById('f-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFood(); });
   document.getElementById('w-name').addEventListener('keydown', e => { if (e.key === 'Enter') addWorkout(); });
 </script>
- 
+
 </body>
 </html>
- 
