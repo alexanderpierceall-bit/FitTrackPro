@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitLog — Daily Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --surface2: #1e2126;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --muted: #888c96;
+    --accent-orange: #f06a2a;
+    --accent-blue: #3d8ef0;
+    --accent-green: #3db87d;
+    --accent-purple: #9b6cf7;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+ 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+ 
+  /* ── Header ── */
+  header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+ 
+  .logo {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+ 
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent-orange);
+    display: inline-block;
+  }
+ 
+  .date-badge {
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 14px;
+  }
+ 
+  /* ── Layout ── */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+ 
+  /* ── Dashboard ── */
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+ 
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+ 
+  .stat::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+ 
+  .stat.calories::before { background: var(--accent-orange); }
+  .stat.exercises::before { background: var(--accent-blue); }
+  .stat.sets::before { background: var(--accent-green); }
+ 
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+ 
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+ 
+  .stat.calories .stat-value { color: var(--accent-orange); }
+  .stat.exercises .stat-value { color: var(--accent-blue); }
+  .stat.sets .stat-value { color: var(--accent-green); }
+ 
+  .stat-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+ 
+  /* ── Tabs ── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    margin-bottom: 1.5rem;
+  }
+ 
+  .tab {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+ 
+  .tab svg { width: 16px; height: 16px; }
+ 
+  .tab:hover { color: var(--text); }
+ 
+  .tab.active {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border2);
+  }
+ 
+  /* ── Sections ── */
+  .section { display: none; }
+  .section.active { display: block; }
+ 
+  /* ── Add Form ── */
+  .add-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+ 
+  .form-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+ 
+  .form-grid {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+ 
+  .form-grid-food { grid-template-columns: 2fr 1fr 1fr; }
+  .form-grid-workout { grid-template-columns: 2fr 1fr 1fr 1fr; }
+ 
+  .field label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+ 
+  .field input, .field select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+ 
+  .field input:focus, .field select:focus {
+    border-color: rgba(255,255,255,0.3);
+  }
+ 
+  .field input::placeholder { color: var(--muted); }
+ 
+  .field select option { background: #1e2126; }
+ 
+  .submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+ 
+  .submit-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.22);
+  }
+ 
+  .submit-btn svg { width: 16px; height: 16px; }
+ 
+  /* ── Entries ── */
+  .entries-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0 2px;
+  }
+ 
+  .entries-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+ 
+  .entries-count {
+    font-size: 12px;
+    color: var(--muted);
+  }
+ 
+  .entries { display: flex; flex-direction: column; gap: 8px; }
+ 
+  .entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    animation: slideIn 0.18s ease;
+  }
+ 
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+ 
+  .entry-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+ 
+  .entry-icon.breakfast { background: rgba(240,106,42,0.15); }
+  .entry-icon.lunch { background: rgba(61,184,125,0.15); }
+  .entry-icon.dinner { background: rgba(61,142,240,0.15); }
+  .entry-icon.snack { background: rgba(155,108,247,0.15); }
+  .entry-icon.workout { background: rgba(61,142,240,0.12); }
+ 
+  .entry-body { flex: 1; min-width: 0; }
+ 
+  .entry-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+ 
+  .entry-meta {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+ 
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+ 
+  .badge-breakfast { background: rgba(240,106,42,0.18); color: #f8a070; }
+  .badge-lunch { background: rgba(61,184,125,0.18); color: #5dcfa0; }
+  .badge-dinner { background: rgba(61,142,240,0.18); color: #6babf7; }
+  .badge-snack { background: rgba(155,108,247,0.18); color: #b990ff; }
+ 
+  .entry-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+ 
+  .entry-value {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+  }
+ 
+  .entry-value.cal { color: var(--accent-orange); }
+  .entry-value.sets { color: var(--accent-green); }
+ 
+  .delete-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s, background 0.15s;
+  }
+ 
+  .delete-btn:hover { color: #e24b4a; background: rgba(226,75,74,0.1); }
+  .delete-btn svg { width: 15px; height: 15px; }
+ 
+  /* ── Total row ── */
+  .total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--muted);
+  }
+ 
+  .total-bar strong {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+ 
+  /* ── Empty state ── */
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+  }
+ 
+  .empty-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.4;
+  }
+ 
+  .empty p { font-size: 14px; }
+ 
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    header { padding: 1rem; }
+    main { padding: 1.25rem 1rem 3rem; }
+    .dashboard { grid-template-columns: 1fr 1fr; }
+    .dashboard .stat:last-child { grid-column: 1 / -1; }
+    .form-grid-food { grid-template-columns: 1fr 1fr; }
+    .form-grid-food .field:first-child { grid-column: 1 / -1; }
+    .form-grid-workout { grid-template-columns: 1fr 1fr; }
+    .form-grid-workout .field:first-child { grid-column: 1 / -1; }
+    .stat-value { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+ 
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    FitLog
+  </div>
+  <div class="date-badge" id="header-date"></div>
+</header>
+ 
+<main>
+ 
+  <!-- Dashboard -->
+  <div class="dashboard">
+    <div class="stat calories">
+      <div class="stat-label">Calories</div>
+      <div class="stat-value" id="dash-cal">0</div>
+      <div class="stat-sub">kcal today</div>
+    </div>
+    <div class="stat exercises">
+      <div class="stat-label">Exercises</div>
+      <div class="stat-value" id="dash-ex">0</div>
+      <div class="stat-sub">logged today</div>
+    </div>
+    <div class="stat sets">
+      <div class="stat-label">Total sets</div>
+      <div class="stat-value" id="dash-sets">0</div>
+      <div class="stat-sub">across all exercises</div>
+    </div>
+  </div>
+ 
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" id="tab-food" onclick="switchTab('food')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 1 7 7c0 4-3 6-3 9H8c0-3-3-5-3-9a7 7 0 0 1 7-7z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+      Food log
+    </button>
+    <button class="tab" id="tab-workout" onclick="switchTab('workout')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4v16M18 4v16M6 12h12M3 8h3M18 8h3M3 16h3M18 16h3"/></svg>
+      Workout log
+    </button>
+  </div>
+ 
+  <!-- Food section -->
+  <div class="section active" id="sec-food">
+    <div class="add-form">
+      <div class="form-title">Add a meal</div>
+      <div class="form-grid form-grid-food">
+        <div class="field">
+          <label>Meal name</label>
+          <input type="text" id="f-name" placeholder="e.g. Chicken and rice" />
+        </div>
+        <div class="field">
+          <label>Calories</label>
+          <input type="number" id="f-cal" placeholder="0" min="0" />
+        </div>
+        <div class="field">
+          <label>Meal type</label>
+          <select id="f-type">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack">Snack</option>
+          </select>
+        </div>
+      </div>
+      <button class="submit-btn" onclick="addFood()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add meal
+      </button>
+    </div>
+    <div class="entries-header">
+      <span class="entries-title">Today's meals</span>
+      <span class="entries-count" id="food-count"></span>
+    </div>
+    <div class="entries" id="food-entries"></div>
+    <div id="food-total" style="display:none" class="total-bar">
+      <span>Daily total</span>
+      <strong id="food-total-val"></strong>
+    </div>
+  </div>
+ 
+  <!-- Workout section -->
+  <div class="section" id="sec-workout">
+    <div class="add-form">
+      <div class="form-title">Add an exercise</div>
+      <div class="form-grid form-grid-workout">
+        <div class="field">
+          <label>Exercise name</label>
+          <input type="text" id="w-name" placeholder="e.g. Bench press" />
+        </div>
+        <div class="field">
+          <label>Sets</label>
+          <input type="number" id="w-sets" placeholder="3" min="1" />
+        </div>
+        <div class="field">
+          <label>Reps</label>
+          <input type="number" id="w-reps" placeholder="10" min="1" />
+        </div>
+        <div class="field">
+          <label>Weight (lbs)</label>
+          <input type="number" id="w-weight" placeholder="Optional" min="0" />
+        </div>
+      </div>
+      <button class="submit-btn" onclick="addWorkout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add exercise
+      </button>
+    </div>
+    <div class="entries-header">
+      <span class="entries-title">Today's exercises</span>
+      <span class="entries-count" id="workout-count"></span>
+    </div>
+    <div class="entries" id="workout-entries"></div>
+    <div id="workout-total" style="display:none" class="total-bar">
+      <span>Total sets today</span>
+      <strong id="workout-total-val"></strong>
+    </div>
+  </div>
+ 
+</main>
+ 
+<script>
+  const MEAL_EMOJI = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
+  const todayKey = () => new Date().toISOString().slice(0,10);
+  const LS_FOOD = 'fitlog_food_' + todayKey();
+  const LS_WORKOUT = 'fitlog_workout_' + todayKey();
+ 
+  let foodLog = [];
+  let workoutLog = [];
+ 
+  function loadData() {
+    try { foodLog = JSON.parse(localStorage.getItem(LS_FOOD) || '[]'); } catch(e) { foodLog = []; }
+    try { workoutLog = JSON.parse(localStorage.getItem(LS_WORKOUT) || '[]'); } catch(e) { workoutLog = []; }
+  }
+ 
+  function saveFood() { localStorage.setItem(LS_FOOD, JSON.stringify(foodLog)); }
+  function saveWorkout() { localStorage.setItem(LS_WORKOUT, JSON.stringify(workoutLog)); }
+ 
+  function switchTab(t) {
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + t).classList.add('active');
+    document.getElementById('sec-' + t).classList.add('active');
+  }
+ 
+  function addFood() {
+    const name = document.getElementById('f-name').value.trim();
+    const cal = parseInt(document.getElementById('f-cal').value) || 0;
+    const type = document.getElementById('f-type').value;
+    if (!name) { document.getElementById('f-name').focus(); return; }
+    foodLog.push({ id: Date.now(), name, cal, type });
+    saveFood();
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-cal').value = '';
+    renderFood();
+    updateDash();
+  }
+ 
+  function deleteFood(id) {
+    foodLog = foodLog.filter(f => f.id !== id);
+    saveFood();
+    renderFood();
+    updateDash();
+  }
+ 
+  function addWorkout() {
+    const name = document.getElementById('w-name').value.trim();
+    const sets = parseInt(document.getElementById('w-sets').value) || 0;
+    const reps = parseInt(document.getElementById('w-reps').value) || 0;
+    const weight = parseFloat(document.getElementById('w-weight').value) || 0;
+    if (!name) { document.getElementById('w-name').focus(); return; }
+    workoutLog.push({ id: Date.now(), name, sets, reps, weight });
+    saveWorkout();
+    document.getElementById('w-name').value = '';
+    document.getElementById('w-sets').value = '';
+    document.getElementById('w-reps').value = '';
+    document.getElementById('w-weight').value = '';
+    renderWorkout();
+    updateDash();
+  }
+ 
+  function deleteWorkout(id) {
+    workoutLog = workoutLog.filter(w => w.id !== id);
+    saveWorkout();
+    renderWorkout();
+    updateDash();
+  }
+ 
+  function renderFood() {
+    const el = document.getElementById('food-entries');
+    const totalEl = document.getElementById('food-total');
+    const countEl = document.getElementById('food-count');
+ 
+    if (!foodLog.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">🥗</div><p>No meals logged yet — add your first meal above.</p></div>`;
+      totalEl.style.display = 'none';
+      countEl.textContent = '';
+      return;
+    }
+ 
+    countEl.textContent = foodLog.length + ' meal' + (foodLog.length !== 1 ? 's' : '');
+    el.innerHTML = foodLog.map(f => `
+      <div class="entry">
+        <div class="entry-icon ${f.type}">${MEAL_EMOJI[f.type]}</div>
+        <div class="entry-body">
+          <div class="entry-name">${escHtml(f.name)}</div>
+          <div class="entry-meta"><span class="badge badge-${f.type}">${f.type}</span></div>
+        </div>
+        <div class="entry-right">
+          <span class="entry-value cal">${f.cal} kcal</span>
+          <button class="delete-btn" onclick="deleteFood(${f.id})" aria-label="Delete ${escHtml(f.name)}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>`).join('');
+ 
+    const total = foodLog.reduce((s, f) => s + f.cal, 0);
+    document.getElementById('food-total-val').textContent = total + ' kcal';
+    totalEl.style.display = 'flex';
+  }
+ 
+  function renderWorkout() {
+    const el = document.getElementById('workout-entries');
+    const totalEl = document.getElementById('workout-total');
+    const countEl = document.getElementById('workout-count');
+ 
+    if (!workoutLog.length) {
+      el.innerHTML = `<div class="empty"><div class="empty-icon">🏋️</div><p>No exercises logged yet — add your first exercise above.</p></div>`;
+      totalEl.style.display = 'none';
+      countEl.textContent = '';
+      return;
+    }
+ 
+    countEl.textContent = workoutLog.length + ' exercise' + (workoutLog.length !== 1 ? 's' : '');
+    el.innerHTML = workoutLog.map(w => `
+      <div class="entry">
+        <div class="entry-icon workout">💪</div>
+        <div class="entry-body">
+          <div class="entry-name">${escHtml(w.name)}</div>
+          <div class="entry-meta">${w.sets} sets × ${w.reps} reps${w.weight ? ' · ' + w.weight + ' lbs' : ''}</div>
+        </div>
+        <div class="entry-right">
+          <span class="entry-value sets">${w.sets} sets</span>
+          <button class="delete-btn" onclick="deleteWorkout(${w.id})" aria-label="Delete ${escHtml(w.name)}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>`).join('');
+ 
+    const total = workoutLog.reduce((s, w) => s + w.sets, 0);
+    document.getElementById('workout-total-val').textContent = total + ' sets';
+    totalEl.style.display = 'flex';
+  }
+ 
+  function updateDash() {
+    document.getElementById('dash-cal').textContent = foodLog.reduce((s, f) => s + f.cal, 0);
+    document.getElementById('dash-ex').textContent = workoutLog.length;
+    document.getElementById('dash-sets').textContent = workoutLog.reduce((s, w) => s + w.sets, 0);
+  }
+ 
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+ 
+  function setDate() {
+    const d = new Date();
+    document.getElementById('header-date').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+ 
+  loadData();
+  setDate();
+  renderFood();
+  renderWorkout();
+  updateDash();
+ 
+  document.getElementById('f-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFood(); });
+  document.getElementById('w-name').addEventListener('keydown', e => { if (e.key === 'Enter') addWorkout(); });
+</script>
+ 
+</body>
+</html>
+ 
