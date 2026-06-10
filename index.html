@@ -532,9 +532,9 @@
       <div class="stat-sub">logged today</div>
     </div>
     <div class="stat sets">
-      <div class="stat-label">Total sets</div>
-      <div class="stat-value" id="dash-sets">0</div>
-      <div class="stat-sub">across all exercises</div>
+      <div class="stat-label">Volume</div>
+      <div class="stat-value" id="dash-volume">0</div>
+      <div class="stat-sub">lbs lifted today</div>
     </div>
   </div>
 
@@ -610,37 +610,33 @@
   <!-- Workout section -->
   <div class="section" id="sec-workout">
     <div class="add-form">
-      <div class="form-title">Add an exercise</div>
-      <div class="form-grid form-grid-workout">
+      <div class="form-title">Add a workout</div>
+      <div class="form-grid">
         <div class="field">
-          <label>Exercise name</label>
-          <input type="text" id="w-name" placeholder="e.g. Bench press" />
+          <label>Workout title</label>
+          <input type="text" id="w-name" placeholder="e.g. Push Day" />
         </div>
         <div class="field">
-          <label>Sets</label>
-          <input type="number" id="w-sets" placeholder="3" min="1" />
+          <label>Total volume lifted (lbs)</label>
+          <input type="number" id="w-volume" placeholder="e.g. 12000" min="0" />
         </div>
         <div class="field">
-          <label>Reps</label>
-          <input type="number" id="w-reps" placeholder="10" min="1" />
-        </div>
-        <div class="field">
-          <label>Weight (lbs)</label>
-          <input type="number" id="w-weight" placeholder="Optional" min="0" />
+          <label>Notes</label>
+          <input type="text" id="w-notes" placeholder="e.g. PR on bench, felt strong" />
         </div>
       </div>
       <button class="submit-btn" onclick="addWorkout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add exercise
+        Add workout
       </button>
     </div>
     <div class="entries-header">
-      <span class="entries-title">Today's exercises</span>
+      <span class="entries-title">Today's workouts</span>
       <span class="entries-count" id="workout-count"></span>
     </div>
     <div class="entries" id="workout-entries"></div>
     <div id="workout-total" style="display:none" class="total-bar">
-      <span>Total sets today</span>
+      <span>Total volume lifted today</span>
       <strong id="workout-total-val"></strong>
     </div>
   </div>
@@ -662,8 +658,8 @@
         <div class="history-card-value" id="weekly-protein">0g</div>
       </div>
       <div class="history-card">
-        <div class="history-card-label">Workouts</div>
-        <div class="history-card-value" id="weekly-workouts">0</div>
+        <div class="history-card-label">Volume</div>
+        <div class="history-card-value" id="weekly-volume">0</div>
       </div>
       <div class="history-card">
         <div class="history-card-label">Creatine Days</div>
@@ -689,8 +685,8 @@
         <div class="history-card-value" id="monthly-protein">0g</div>
       </div>
       <div class="history-card">
-        <div class="history-card-label">Workouts</div>
-        <div class="history-card-value" id="monthly-workouts">0</div>
+        <div class="history-card-label">Volume</div>
+        <div class="history-card-value" id="monthly-volume">0</div>
       </div>
       <div class="history-card">
         <div class="history-card-label">Creatine Days</div>
@@ -756,16 +752,18 @@
 
   function addWorkout() {
     const name = document.getElementById('w-name').value.trim();
-    const sets = parseInt(document.getElementById('w-sets').value) || 0;
-    const reps = parseInt(document.getElementById('w-reps').value) || 0;
-    const weight = parseFloat(document.getElementById('w-weight').value) || 0;
+    const volume = parseInt(document.getElementById('w-volume').value) || 0;
+    const notes = document.getElementById('w-notes').value.trim();
+
     if (!name) { document.getElementById('w-name').focus(); return; }
-    workoutLog.push({ id: Date.now(), name, sets, reps, weight });
+
+    workoutLog.push({ id: Date.now(), name, volume, notes });
     saveWorkout();
+
     document.getElementById('w-name').value = '';
-    document.getElementById('w-sets').value = '';
-    document.getElementById('w-reps').value = '';
-    document.getElementById('w-weight').value = '';
+    document.getElementById('w-volume').value = '';
+    document.getElementById('w-notes').value = '';
+
     renderWorkout();
     updateDash();
   }
@@ -868,7 +866,7 @@
       calories: foods.reduce((s, f) => s + (f.cal || 0), 0),
       protein: foods.reduce((s, f) => s + (f.protein || 0), 0),
       workouts: workouts.length,
-      sets: workouts.reduce((s, w) => s + (w.sets || 0), 0),
+      volume: workouts.reduce((s, w) => s + (w.volume || 0), 0),
       creatine: readCreatine(key)
     };
   }
@@ -904,7 +902,7 @@
 
   function renderHistoryRows(targetId, summaries, showAllRows) {
     const el = document.getElementById(targetId);
-    const rows = summaries.filter(s => showAllRows || s.calories || s.protein || s.workouts || s.sets || s.creatine);
+    const rows = summaries.filter(s => showAllRows || s.calories || s.protein || s.workouts || s.volume || s.creatine);
 
     if (!rows.length) {
       el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><p>No history logged yet.</p></div>`;
@@ -916,7 +914,7 @@
         <span>Date</span>
         <span>Calories</span>
         <span>Protein</span>
-        <span>Workouts</span>
+        <span>Volume</span>
         <span>Creatine</span>
       </div>
       ${rows.map(s => `
@@ -924,7 +922,7 @@
           <strong>${new Date(s.key + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</strong>
           <span data-label="Calories">${s.calories} kcal</span>
           <span data-label="Protein">${s.protein}g</span>
-          <span data-label="Workouts">${s.workouts} workout${s.workouts !== 1 ? 's' : ''}</span>
+          <span data-label="Volume">${(s.volume || 0).toLocaleString()} lbs</span>
           <span data-label="Creatine">${s.creatine ? '✓ Taken' : '☐ Not logged'}</span>
         </div>
       `).join('')}
@@ -937,14 +935,14 @@
     const totals = summaries.reduce((acc, s) => {
       acc.calories += s.calories;
       acc.protein += s.protein;
-      acc.workouts += s.workouts;
+      acc.volume += s.volume || 0;
       acc.creatine += s.creatine ? 1 : 0;
       return acc;
-    }, { calories: 0, protein: 0, workouts: 0, creatine: 0 });
+    }, { calories: 0, protein: 0, volume: 0, creatine: 0 });
 
     document.getElementById('weekly-cal').textContent = totals.calories;
     document.getElementById('weekly-protein').textContent = totals.protein + 'g';
-    document.getElementById('weekly-workouts').textContent = totals.workouts;
+    document.getElementById('weekly-volume').textContent = totals.volume.toLocaleString();
     document.getElementById('weekly-creatine').textContent = totals.creatine + '/7';
     document.getElementById('weekly-range').textContent = keys[0] + ' to ' + keys[keys.length - 1];
     renderHistoryRows('weekly-list', summaries, true);
@@ -956,14 +954,14 @@
     const totals = summaries.reduce((acc, s) => {
       acc.calories += s.calories;
       acc.protein += s.protein;
-      acc.workouts += s.workouts;
+      acc.volume += s.volume || 0;
       acc.creatine += s.creatine ? 1 : 0;
       return acc;
-    }, { calories: 0, protein: 0, workouts: 0, creatine: 0 });
+    }, { calories: 0, protein: 0, volume: 0, creatine: 0 });
 
     document.getElementById('monthly-cal').textContent = totals.calories;
     document.getElementById('monthly-protein').textContent = totals.protein + 'g';
-    document.getElementById('monthly-workouts').textContent = totals.workouts;
+    document.getElementById('monthly-volume').textContent = totals.volume.toLocaleString();
     document.getElementById('monthly-creatine').textContent = totals.creatine;
     document.getElementById('monthly-range').textContent = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     renderHistoryRows('monthly-list', summaries, false);
@@ -979,7 +977,7 @@
     document.getElementById('dash-cal').textContent = foodLog.reduce((s, f) => s + f.cal, 0);
     document.getElementById('dash-protein').textContent = foodLog.reduce((s, f) => s + (f.protein || 0), 0) + 'g';
     document.getElementById('dash-ex').textContent = workoutLog.length;
-    document.getElementById('dash-sets').textContent = workoutLog.reduce((s, w) => s + w.sets, 0);
+    document.getElementById('dash-volume').textContent = workoutLog.reduce((s, w) => s + (w.volume || 0), 0).toLocaleString();
     document.getElementById('creatine-check').textContent = creatineTaken ? '✓' : '☐';
   }
 
@@ -1005,6 +1003,8 @@
 
   document.getElementById('f-name').addEventListener('keydown', e => { if (e.key === 'Enter') addFood(); });
   document.getElementById('w-name').addEventListener('keydown', e => { if (e.key === 'Enter') addWorkout(); });
+  document.getElementById('w-volume').addEventListener('keydown', e => { if (e.key === 'Enter') addWorkout(); });
+  document.getElementById('w-notes').addEventListener('keydown', e => { if (e.key === 'Enter') addWorkout(); });
 </script>
 
 </body>
